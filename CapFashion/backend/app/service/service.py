@@ -18,6 +18,17 @@ class AppService:
 
         return [Post(**post) async for post in res]
     
+    async def get_post(self, id: PyObjectId) -> Post:
+        res = await self.collection.find_one({"_id": id})
+
+        if res:
+            return Post(
+                id,
+                **res
+            )
+        else:
+            raise HTTPException(status_code=404, detail="Post not found")
+    
     async def create_post(self, post: NewPost) -> NewPost:
         newPost = post.dict()
         newPost["created_at"] = datetime.now()

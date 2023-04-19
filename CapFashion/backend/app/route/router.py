@@ -10,6 +10,10 @@ router = APIRouter()
 async def get_posts(service = Depends(get_app_service)):
     return await service.get_posts()
 
+@router.get("/posts/{id}", response_model=Post)
+async def get_post(id: PyObjectId, service = Depends(get_app_service)):
+    return await service.get_post(id)
+
 @router.post("/posts", response_model=Post)
 async def create_post(post: NewPost, service = Depends(get_app_service)):
     return await service.create_post(post)
