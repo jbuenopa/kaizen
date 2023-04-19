@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from app.dependencies import get_app_service
-from app.model.post import Post, NewPost
+from app.model.post import Post, NewPost, EditPost
 from typing import List
 from app.model.types import PyObjectId
 
@@ -17,3 +17,7 @@ async def create_post(post: NewPost, service = Depends(get_app_service)):
 @router.delete("/posts/{id}")
 async def delete_post(id: PyObjectId, service = Depends(get_app_service)):
     return await service.delete_post(id)
+
+@router.put("/posts/{id}", response_model=Post)
+async def modify_post(id: PyObjectId, post: EditPost, service = Depends(get_app_service)):
+    return await service.modify_post(id, post)

@@ -1,9 +1,10 @@
 from motor.motor_asyncio import AsyncIOMotorCollection
-from app.model.post import Post, NewPost
+from app.model.post import Post, NewPost, EditPost
 from typing import List, Dict
 from datetime import datetime
 from fastapi import HTTPException
 from app.model.types import PyObjectId
+from pymongo import ReturnDocument
 
 
 class AppService:
@@ -38,5 +39,23 @@ class AppService:
             return {
                 "message": "Post deleted successfully"
             }
+        else:
+            raise HTTPException(status_code=404, detail="Post not found")
+        
+    async def modify_post(self, id: PyObjectId, post: EditPost) -> Post:
+        # Modify and return the modified document
+        result = await self.collection.find_one_and_update(
+            {"_id": id},
+            {"$set": {k: v for k ,v in post.dict().items() if v is not None}},
+            return_document=ReturnDocument.AFTER
+        )
+
+        print(result)
+
+        if result:
+            return Post(
+                id=result["_id"],
+                **result
+            )
         else:
             raise HTTPException(status_code=404, detail="Post not found")
