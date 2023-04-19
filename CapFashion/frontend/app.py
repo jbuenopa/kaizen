@@ -2,12 +2,18 @@ from flask import Flask, render_template, request, redirect
 from markupsafe import escape
 import requests
 import json
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+BACKEND_URL = os.getenv("BACKEND_URL")
 
 app = Flask(__name__)
 
 @app.get("/")
 def hello():
-    data = requests.get("http://localhost:8001/posts")
+    data = requests.get(f"{BACKEND_URL}/posts")
     jsonRes = data.json()
     return render_template("index.html", data=jsonRes)
 
@@ -39,7 +45,7 @@ def addPost():
     if link5 != "":
         refs_links.append(link5)
 
-    data = requests.post("http://localhost:8001/posts", json={
+    data = requests.post(f"{BACKEND_URL}/posts", json={
         "author": author,
         "title": title,
         "content": content,
@@ -49,7 +55,7 @@ def addPost():
 
 @app.get("/edit/<id>")
 def getEditPost(id):
-    req = requests.get(f"http://localhost:8001/posts/{id}")
+    req = requests.get(f"{BACKEND_URL}/posts/{id}")
     data = req.json()
     print(data)
     return render_template("edit.html", data=data)
@@ -78,7 +84,7 @@ def editPost(id):
     if link5 != "":
         refs_links.append(link5)
 
-    data = requests.put(f"http://localhost:8001/posts/{id}", json={
+    data = requests.put(f"{BACKEND_URL}/posts/{id}", json={
         "author": author,
         "title": title,
         "content": content,
@@ -88,5 +94,5 @@ def editPost(id):
 
 @app.get("/delete/<id>")
 def deletePost(id):
-    data = requests.delete(f"http://localhost:8001/posts/{id}")
+    data = requests.delete(f"{BACKEND_URL}/posts/{id}")
     return redirect("/")
