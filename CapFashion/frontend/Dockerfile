@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 COPY ./app /code/app
 
-CMD ["flask", "run", "app"]
+CMD ["flask", "run"]
