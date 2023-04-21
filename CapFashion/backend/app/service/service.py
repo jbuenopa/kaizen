@@ -1,7 +1,7 @@
 from motor.motor_asyncio import AsyncIOMotorCollection
 from app.model.post import Post, NewPost, EditPost
 from typing import List, Dict
-from datetime import datetime
+from datetime import datetime, timedelta
 from fastapi import HTTPException
 from app.model.types import PyObjectId
 from pymongo import ReturnDocument
@@ -33,7 +33,7 @@ class AppService:
     
     async def create_post(self, post: NewPost) -> Post:
         newPost = post.dict()
-        newPost["created_at"] = datetime.now()
+        newPost["created_at"] = datetime.now() + timedelta(hours=2)
         res = await self.collection.insert_one(newPost)
 
         if res:
