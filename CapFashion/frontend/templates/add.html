@@ -1,5 +1,15 @@
 <!DOCTYPE html>
+<style>
+    html {
+            font-family: sans-serif;
+        }
+
+    body {
+            margin: 30px;
+        }
+</style>
 <html>
+    <body>
     <h1>Create new post:</h1>
     <form action="/add" method="POST">
         <label for="title">Title:</label> <br>
@@ -15,4 +25,6 @@
         <input type="text" id="refs_links" name="link4"><br>
         <input type="text" id="refs_links" name="link5"><br>
         <input type="submit" value="Submit">
+    </form>
+    </body>
 </html>

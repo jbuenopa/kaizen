@@ -1,12 +1,33 @@
 <!DOCTYPE html>
 <html>
+    <style>
+        html {
+            font-family: sans-serif;
+            display: flex;
+            align-items: start;
+        }
+        h4 {
+            margin-block: 5px
+        }
+
+        h2 {
+            margin-block: 5px
+        }
+
+        body {
+            margin: 30px;
+        }
+    </style>
 <body>
     <h1>Posts:</h1>
     <button onclick="window.location.href='/add'">Add Post</button> <br>
 -----------------------------------
     {% for item in data %}
-        <h2>{{ item.title }}</h2>
-        <h4>Author: {{item.author}}</h4>
+        <p>
+            <h2>{{ item.title }}</h2>
+            <h4>Author: {{item.author}}</h4>
+        </p>
+        
         <p>{{ item.content }}</p>
         <p>Links:</p>
         <ul>

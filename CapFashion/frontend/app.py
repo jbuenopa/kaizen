@@ -4,6 +4,7 @@ import requests
 import json
 import os
 from dotenv import load_dotenv
+from datetime import datetime
 
 load_dotenv()
 
@@ -11,10 +12,18 @@ BACKEND_URL = os.getenv("BACKEND_URL")
 
 app = Flask(__name__)
 
+def beautifyDates(jsonRes):
+    for post in jsonRes:
+        date = datetime.strptime(post["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
+        date = date.strftime("%d/%m/%Y %H:%M")
+        post["created_at"] = date
+
 @app.get("/")
 def hello():
     data = requests.get(f"{BACKEND_URL}/posts")
     jsonRes = data.json()
+    beautifyDates(jsonRes)
+
     return render_template("index.html", data=jsonRes)
 
 @app.get("/add")
