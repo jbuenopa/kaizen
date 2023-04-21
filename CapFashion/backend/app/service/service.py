@@ -21,15 +21,17 @@ class AppService:
     async def get_post(self, id: PyObjectId) -> Post:
         res = await self.collection.find_one({"_id": id})
 
+        print(res)
+
         if res:
             return Post(
-                id,
+                id = res["_id"],
                 **res
             )
         else:
             raise HTTPException(status_code=404, detail="Post not found")
     
-    async def create_post(self, post: NewPost) -> NewPost:
+    async def create_post(self, post: NewPost) -> Post:
         newPost = post.dict()
         newPost["created_at"] = datetime.now()
         res = await self.collection.insert_one(newPost)
@@ -43,8 +45,6 @@ class AppService:
         res = await self.collection.delete_one(
             {"_id": id}
         )
-
-        print(res.deleted_count)
 
         if res.deleted_count == 1:
             return {
@@ -61,11 +61,9 @@ class AppService:
             return_document=ReturnDocument.AFTER
         )
 
-        print(result)
-
         if result:
             return Post(
-                id=result["_id"],
+                id = result["_id"],
                 **result
             )
         else:
