@@ -2,3 +2,4 @@ flask
 flask[async]
 markupsafe
 requests
+python-dotenv
