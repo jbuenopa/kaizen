@@ -60,7 +60,7 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
   resource_group_name = azurerm_resource_group.aks_rg.name
   dns_prefix          = "proyecto-cluster"
   kubernetes_version  = data.azurerm_kubernetes_service_versions.current.latest_version
-  node_resource_group = "${azurerm_resource_group.aks_rg.name}-nrg"
+  node_resource_group = var.node_resource_group_name.default
 
   default_node_pool {
     name                 = "proyectopool"
@@ -115,14 +115,14 @@ resource "azurerm_kubernetes_cluster_node_pool" "node" {
 #Create public IPs for our Front and Back services
 resource "azurerm_public_ip" "public_ip1" {
   name                = "PublicIPBackend"
-  resource_group_name = var.resource_group_name
+  resource_group_name = var.node_resource_group_name.default
   location            = var.location
   allocation_method   = "Static"
 }
 
 resource "azurerm_public_ip" "public_ip2" {
   name                = "PublicIPFrontend"
-  resource_group_name = var.resource_group_name
+  resource_group_name = var.node_resource_group_name.default
   location            = var.location
   allocation_method   = "Static"
 }
