@@ -1,44 +1,133 @@
 <!DOCTYPE html>
 <html>
-    <style>
-        html {
-            font-family: sans-serif;
-            display: flex;
-            align-items: start;
-        }
-        h4 {
-            margin-block: 5px
-        }
+  <head>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    >
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+          <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            <img src="https://companieslogo.com/img/orig/CAP.PA-9b4110b0.png?t=1651902188" alt="Capgemini Logo" width="40" height="32" class="me-2">
+            <span class="fs-4">CapFashion</span>
+          </a>
+      
+          <ul class="nav nav-pills">
+            <li class="nav-item">
+              <a href="/" class="nav-link active" aria-current="page">Home</a>
+            </li>
+            <li class="nav-item">
+              <a href="/add" class="nav-link">Create Post</a>
+            </li>
+          </ul>
+        </header>
+      </div>
+      
+    <h1 class="ms-5 d-flex justify-content-center">Posts</h1>
+    <div class="ms-5 mb-4 d-flex justify-content-center">
+      {% for item in data %}
+      <div class="card p-2 m-2">
+        <div class="card-body">
+          <p>
+            <h2 class="card-title">{{ item.title }}</h2>
+            <h6 class="card-subtitle text-muted">{{ item.author }}</h6>
+          </p>
 
-        h2 {
-            margin-block: 5px
-        }
-
-        body {
-            margin: 30px;
-        }
-    </style>
-<body>
-    <h1>Posts:</h1>
-    <button onclick="window.location.href='/add'">Add Post</button> <br>
------------------------------------
-    {% for item in data %}
-        <p>
-            <h2>{{ item.title }}</h2>
-            <h4>Author: {{item.author}}</h4>
-        </p>
-        
-        <p>{{ item.content }}</p>
-        <p>Links:</p>
-        <ul>
+          <p class="card-text">{{ item.content }}</p>
+          <p>Links:</p>
+          <ul>
             {% for link in item.refs_links %}
-                <li><a href="{{ link }}">{{ link }}</a></li>
+            <li><a href="{{ link }}">{{ link }}</a></li><br>
             {% endfor %}
-        </ul>
-        <p>Created at: {{ item.created_at }}</p>
-        <button onclick="window.location.href='/edit/{{ item._id }}'">Edit</button>
-        <button onclick="window.location.href='/delete/{{ item._id }}'">Delete</button> <br>
------------------------------------
-    {% endfor %}
-</body>
+          </ul>
+          <p>Created at: {{ item.created_at }}</p><br>
+          <div class="d-flex justify-content-around">
+            <button
+              onclick="window.location.href='/edit/{{ item._id }}'"
+              class="btn btn-secondary"
+            >
+              Edit
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              onclick="openDeleteModal('{{ item._id }}')"
+            >
+              Delete
+            </button>
+
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div
+      class="modal fade"
+      id="deleteModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Delete confirmation</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p id="deleteModalText"></p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              id="deleteButton"
+              type="button"
+              class="btn btn-danger"
+              onclick="deletePost()"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function openDeleteModal(postId) {
+        var modal = document.getElementById("deleteModal");
+        var deleteModalText = document.getElementById("deleteModalText");
+        var deleteButton = document.getElementById("deleteButton");
+
+        // Actualizar el contenido del modal con los datos del post correspondiente
+        deleteModalText.innerText =
+          "Are you sure you want to delete the current post?";
+
+        // Actualizar el atributo onclick del botón Delete para enviar la solicitud de eliminación
+        deleteButton.onclick = function () {
+          window.location.href = "/delete/" + postId;
+        };
+
+        // Abrir el modal
+        var modalInstance = new bootstrap.Modal(modal);
+        modalInstance.show();
+      }
+    </script>
+  </body>
 </html>

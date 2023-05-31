@@ -21,8 +21,6 @@ class AppService:
     async def get_post(self, id: PyObjectId) -> Post:
         res = await self.collection.find_one({"_id": id})
 
-        print(res)
-
         if res:
             return Post(
                 id = res["_id"],
